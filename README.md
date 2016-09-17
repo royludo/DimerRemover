@@ -1,22 +1,17 @@
-+======================================================================+
-|                                                                      |
-|                             DimerRemover                             |
-|                                                                      |
-+======================================================================+
+# DimerRemover
 
+Project previously hosted here: https://sourceforge.net/projects/dimerremover/
 
-CONTENT
--------
+## CONTENT
+
 1. DESCRIPTION
 2. REQUIREMENTS
 3. OPTIONS
 4. USAGE
 5. DETAILS
 6. CHANGELOG
-7. ACKNOWLEDGEMENTS
 
-1. DESCRIPTION
---------------
+## 1. DESCRIPTION
 
 When doing primary analysis on NGS data, one sometimes faces huge amount
 of adapter dimers among the sequences. These sequences are completely
@@ -35,18 +30,16 @@ are not automatically deleted, they are written in another file. You can
 just count the dimers without writing output (it is faster).
 
 
-2. REQUIREMENTS
----------------
+## 2. REQUIREMENTS
 
 Java 7 JVM
 
 
-3. OPTIONS
-------------
+## 3. OPTIONS
 
 By default, input and output files are gzip compressed fastq files
 (fastq.gz).
-
+```
   -i, --input <path>            first input file
   -j, --inputR2 <path>          second input file for paired end data
   --output-nodimer <path>       output file that will contain reads from
@@ -85,36 +78,42 @@ By default, input and output files are gzip compressed fastq files
   -h, --help                    display the program's help
   -v, --version                 display the program's version
   --debug                       verbose output
+```
 
-
-4. USAGE
---------
+## 4. USAGE
 
 Keep adapter dimers in separate file for single read data:
+```bash
   java -jar dimerremover.jar -i R1.fastq.gz --output-nodimer nodimer.fastq.gz \ 
         --output-dimer dimer.fastq.gz -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC
+```
 
 Keep only non-dimers reads in paired end data and save the hash:
+```bash
   java -jar dimerremover.jar -i R1.fastq.gz -j R2.fastq.gz \
         --output-nodimer nodimer.fastq.gz --output-nodimerR2 nodimerR2.fastq.gz \
         --output-dimer /dev/null --output-dimerR2 /dev/null \
         -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
         --hashfile hash.bin
+```
 
 Use previously saved hash on other files:
+```bash
   java -jar dimerremover.jar -i R1.fastq.gz --output-nodimer nodimer.fastq.gz \
         --output-dimer /dev/null --restorehash hash.bin
+```
 
 Integrate the program in a pipe, with a previously uncompressed fastq:
+```bash
   mkfifo R1.fastq.fifo
   zcat R1.fastq.gz | do_some_stuff_on_fastq > R1.fastq.fifo &
   java -jar dimerremover.jar -i R1.fastq.fifo --output-nodimer nodimer.fastq.gz \ 
         --output-dimer dimer.fastq.gz -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCAC \
         --uncompressed-input
+```
 
 
-5. DETAILS
-----------
+## 5. DETAILS
 
  * Algorithm details
 
@@ -135,8 +134,7 @@ option, or when lowering the compression level.
 This section will be further filled.
 
 
-6. CHANGELOG
-------------
+## 6. CHANGELOG
 
  * v0.9.2
   - fixed a thread race condition happening at the end of execution
@@ -157,9 +155,3 @@ This section will be further filled.
   - possibility to get and produce uncompressed fastq
   - providing output files is no longer necessary when only counting the
     dimers
-
-7. ACKNOWLEDGEMENTS
--------------------
-
-I want to thank Claire Kuchly and Gaëlle Vilchez for providing
-feedbacks, allowing me to improve the program.
